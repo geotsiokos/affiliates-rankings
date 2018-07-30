@@ -26,16 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Affiliates_Rankings {
 
 	/**
-	 * Initializes the class
-	 */
-	public static function init() {
-		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
-		if ( self::check_dependencies() ) {
-			self::add_ranking_groups();write_log('ok');
-		}
-	}
-
-	/**
 	 * Admin messages.
 	 *
 	 * @static
@@ -61,6 +51,73 @@ class Affiliates_Rankings {
 		'Rank 5',
 		'Rank 6'
 	);
+
+	/**
+	 * Ranking Conditions per Rank
+	 *
+	 * @static
+	 * @access private
+	 *
+	 * @var array
+	 */
+	private static $ranking_conditions = array(
+		10,
+		20,
+		30,
+		40,
+		50,
+		60
+	);
+
+	/**
+	 * Initializes the class
+	 */
+	public static function init() {
+		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
+		if ( self::check_dependencies() ) {
+			self::add_ranking_groups();
+			add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
+			add_action( 'affiliates_referral', array( __CLASS__, 'affiliates_referral' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * Add new affiliate to first ranking group
+	 *
+	 * @param int $affiliate_id
+	 */
+	public static function affiliates_added_affiliate( $affiliate_id ) {
+		$groups = self::get_ranking_groups();
+		$user_id = affiliates_get_affiliate_user( $affiliate_id );
+		$user = get_user_by( 'ID', $user_id );
+		if ( $user ) {
+			if ( $group = Groups_Group::read_by_name( $groups[0] ) ) {
+				if ( !Groups_User_Group::read( $user_id , $group->group_id ) ) {
+					Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $group->group_id ) );
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param int $referral_id
+	 * @param array $params
+	 */
+	public static function affiliates_referral( $referral_id, $params ) {
+		$ranking_groups = self::get_ranking_groups();
+		$ranking_factor = self::get_ranking_factor();
+		$affiliate_id = $params['affiliate_id'];
+		$current_rank = self::get_affiliate_rank( $affiliate_id );
+		$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
+		$ranking_group_key = array_search( $current_rank, $ranking_groups );
+		if ( $ranking_group_key ) {
+			if ( $affiliate_referrals > $ranking_factor[$ranking_group_key] ) {
+				// @todo promote
+				// @todo check if affiliate has reached maximum rank
+			}
+		}
+	}
 
 	/**
 	 * Prints admin notices.
@@ -92,7 +149,6 @@ class Affiliates_Rankings {
 	 * @return boolean|string
 	 */
 	public static function check_dependencies() {
-
 		$result = true;
 		$active_plugins = get_option( 'active_plugins', array() );
 		$groups_is_active = in_array( 'groups/groups.php', $active_plugins );
@@ -106,6 +162,7 @@ class Affiliates_Rankings {
 			self::$admin_messages[] .= '<div class="error"><strong>Affiliates Rankings</strong> plugin requires one of the <a href="http://www.itthinx.com/shop/affiliates-pro/">Affiliates Pro</a> or <a href="http://www.itthinx.com/shop/affiliates-enterprise/">Affiliates Enterprise</a> plugins to be installed and activated.</div>';
 			$result = false;
 		}
+		// We need Rates to be used as Commission method
 		if ( 
 			!(
 				defined( 'AFFILIATES_EXT_VERSION' ) &&
@@ -129,17 +186,85 @@ class Affiliates_Rankings {
 	 * and add them accordingly 
 	 */
 	public static function add_ranking_groups() {
-		$groups = self::$ranking_groups;
+		$groups = self::get_ranking_groups();
 		if ( class_exists( 'Groups_Group' ) ) {
 			foreach ( $groups as $group ) {
 				if ( !Groups_Group::read_by_name( $group ) ) {
-					$group_id = Groups_Group::create( array( $group ) );write_log( $group_id ? $group_id : 'false');
+					$group_id = Groups_Group::create( array( 'name' => $group ) );
 				}
 			}
 		}
 	}
 
+	/**
+	 * A filter hook for groups names
+	 *
+	 * @return array
+	 */
 	public static function get_ranking_groups() {
 		return apply_filters( 'affiliates_ranking_groups_names', self::$ranking_groups );
+	}
+
+	/**
+	 * A filter hook for ranking conditions
+	 *
+	 * @return mixed
+	 */
+	public static function get_ranking_conditions() {
+		return apply_filters( 'affiliates_ranking_conditions', self::$ranking_conditions );
+	}
+
+	/**
+	 * Get active affiliates
+	 *
+	 * @return array|NULL
+	 */
+	private static function get_affiliates() {
+		return affiliates_get_affiliates();
+	}
+
+	/**
+	 * Get affiliate Rank
+	 *
+	 * @param int $aff_id
+	 * @return string group name
+	 */
+	private static function get_affiliate_rank( $aff_id ) {
+		$ranking_groups = self::get_ranking_groups();
+		// The default Rank is the first Rank
+		$result = $ranking_groups[0];
+		$default_rank_group = Groups_Group::read_by_name( $ranking_groups[0] );
+
+		$user_id = affiliates_get_affiliate_user( $aff_id );
+		$user = get_user_by( 'ID', $user_id );
+		if ( $user ) {
+			foreach( $ranking_groups as $ranking_group ) {
+				if ( $group = Groups_Group::read_by_name( $ranking_group ) ) {
+					if ( Groups_User_Group::read( $user_id , $group->group_id ) ) {
+						$result = $group->name;
+					}
+				}
+			}
+			if ( $result == $ranking_groups[0] ) {
+				Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $default_rank_group->group_id ) );
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Add rates for ranking groups
+	 * @todo this does nothing atm
+	 */
+	public static function add_ranking_rates() {
+		
+	}
+
+	/**
+	 * Syncronize existing affiliates into ranks
+	 * @todo does nothing atm
+	 */
+	public static function sync_affiliates() {
+		
 	}
 }Affiliates_Rankings::init();
