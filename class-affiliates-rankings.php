@@ -100,21 +100,39 @@ class Affiliates_Rankings {
 	}
 
 	/**
-	 * 
+	 * Promote affiliate to a higher rank
+	 *
 	 * @param int $referral_id
 	 * @param array $params
 	 */
 	public static function affiliates_referral( $referral_id, $params ) {
 		$ranking_groups = self::get_ranking_groups();
-		$ranking_factor = self::get_ranking_factor();
+		$ranking_conditions = self::get_ranking_conditions();
 		$affiliate_id = $params['affiliate_id'];
-		$current_rank = self::get_affiliate_rank( $affiliate_id );
-		$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
-		$ranking_group_key = array_search( $current_rank, $ranking_groups );
-		if ( $ranking_group_key ) {
-			if ( $affiliate_referrals > $ranking_factor[$ranking_group_key] ) {
-				// @todo promote
-				// @todo check if affiliate has reached maximum rank
+
+		$user_id = affiliates_get_affiliate_user( $affiliate_id );
+		$user = get_user_by( 'ID', $user_id );
+		if ( $user ) {
+			$current_rank = self::get_affiliate_rank( $affiliate_id );
+			$max_rank_key = count( $ranking_groups ) - 1;
+
+			// @todo replace $affiliate_referrals calculation
+			// with a pluggable ranking factor
+			$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
+			$current_ranking_key = array_search( $current_rank, $ranking_groups );
+			if ( $current_ranking_key ) {
+				// Affiliate hasn't reached the maximum Rank
+				if ( $current_ranking_key < $max_rank_key ) {
+					if ( $affiliate_referrals > $ranking_conditions[$current_ranking_key] ) {
+
+						// @todo remove from previous group
+						$next_ranking_key = $current_ranking_key + 1;
+						$next_ranking_group = Groups_Group::read_by_name( $ranking_groups[$promotion_ranking_key] );
+						if ( $next_ranking_group ) {
+							Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $next_ranking_group->group_id ) );
+						}
+					}
+				}
 			}
 		}
 	}
