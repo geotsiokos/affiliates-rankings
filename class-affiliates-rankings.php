@@ -125,7 +125,12 @@ class Affiliates_Rankings {
 				if ( $current_ranking_key < $max_rank_key ) {
 					if ( $affiliate_referrals > $ranking_conditions[$current_ranking_key] ) {
 
-						// @todo remove from previous group
+						// Remove from current group
+						$current_ranking_group = Groups_Group::read_by_name( $ranking_groups[$current_ranking_key] );
+						if ( $current_ranking_group ) {
+							Groups_User_Group::delete( $user_id, $current_ranking_group->group_id );
+						}
+						// Add to next ranking group
 						$next_ranking_key = $current_ranking_key + 1;
 						$next_ranking_group = Groups_Group::read_by_name( $ranking_groups[$promotion_ranking_key] );
 						if ( $next_ranking_group ) {
