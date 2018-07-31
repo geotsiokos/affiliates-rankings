@@ -19,8 +19,8 @@ By default after activation, 6 new ranking groups will be added: <br />
 and 6 ranking conditions:<br />
 <i>10, 20, 30, 40, 50, 60</i></p>
 
-<p>Each time an affiliate registers throught the affiliates registration form, he will be added automatically to Rank 1. <br />
-In order to be promoted to the next level, Rank 2, the affiliate must have earned at least 20 referrals and so on....</p>
+<p>Each time an affiliate registers throught the affiliates registration form, he will be added automatically to <i>Rank 1</i>. <br />
+In order to be promoted to the next level, <i>Rank 2</i>, the affiliate must have referred at least 20 referrals and so on....</p>
 
 ## API
 <p>You can change the group names and promotion conditions by using the following filters:</p>
