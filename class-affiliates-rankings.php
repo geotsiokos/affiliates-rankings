@@ -120,18 +120,17 @@ class Affiliates_Rankings {
 		$user_id = affiliates_get_affiliate_user( $affiliate_id );
 		$user = get_user_by( 'ID', $user_id );
 		if ( $user ) {
+
+			$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
 			$current_rank = self::get_affiliate_rank( $affiliate_id );
 			$max_rank_key = count( $ranking_groups ) - 1;
-
-			// @todo replace $affiliate_referrals calculation
-			// with a pluggable ranking factor
-			$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
 			$current_ranking_key = array_search( $current_rank, $ranking_groups );
-			if ( $current_ranking_key ) {
+			if ( isset( $current_ranking_key ) ) {
 
 				// Affiliate hasn't reached the maximum Rank
 				if ( $current_ranking_key < $max_rank_key ) {
-					if ( $affiliate_referrals > $ranking_conditions[$current_ranking_key] ) {
+					$next_ranking_key = $current_ranking_key + 1;
+					if ( $affiliate_referrals >= $ranking_conditions[$next_ranking_key] ) {
 
 						// Remove from current group
 						$current_ranking_group = Groups_Group::read_by_name( $ranking_groups[$current_ranking_key] );
@@ -139,11 +138,11 @@ class Affiliates_Rankings {
 							Groups_User_Group::delete( $user_id, $current_ranking_group->group_id );
 						}
 						// Add to next ranking group
-						$next_ranking_key = $current_ranking_key + 1;
-						$next_ranking_group = Groups_Group::read_by_name( $ranking_groups[$promotion_ranking_key] );
+						
+						$next_ranking_group = Groups_Group::read_by_name( $ranking_groups[$next_ranking_key] );
 						if ( $next_ranking_group ) {
 							Groups_User_Group::create( array(
-								'user_id' => $user_id,
+								'user_id'  => $user_id,
 								'group_id' => $next_ranking_group->group_id
 							) );
 						}
@@ -282,7 +281,7 @@ class Affiliates_Rankings {
 			}
 			if ( $result == $ranking_groups[0] ) {
 				Groups_User_Group::create( array(
-					'user_id' => $user_id,
+					'user_id'  => $user_id,
 					'group_id' => $default_rank_group->group_id
 				) );
 			}
