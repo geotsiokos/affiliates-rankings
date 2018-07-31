@@ -40,6 +40,8 @@ class Affiliates_Rankings {
 
 	/**
 	 * Ranking Groups names
+	 * Values can be modified using the filter hook
+	 * affiliates_ranking_groups_names
 	 *
 	 * @static
 	 * @access private
@@ -57,6 +59,8 @@ class Affiliates_Rankings {
 
 	/**
 	 * Ranking Conditions per Rank
+	 * Values can be modified using the filter hook
+	 * affiliates_ranking_conditions
 	 *
 	 * @static
 	 * @access private
