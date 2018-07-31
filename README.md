@@ -1,9 +1,11 @@
 # Affiliates Rankings
-Affiliates Rankings is a ranking system for promoting affiliates based on their performance.
-The plugin is compatible with Affiliates Pro and Affiliates Enterprise plugins by itthinx.com.
+Affiliates Rankings is a ranking system for promoting affiliates based on their performance.<br />
+The plugin is compatible with Affiliates Pro and Affiliates Enterprise plugins by <a href="https://www.itthinx.com/" target="_blank">itthinx.com</a>.
 
 ## Requirements
-Affiliates Pro or Affiliates Enterprise should be installed and at least version 3.0.0.
-Commission method under Affiliates > Settings, Commissions tab should be Rates.
-Groups plugin, a free plugin for managing access restrictions by itthinx.com.
+<ul>
+<li><a href="https://www.itthinx.com/shop/affiliates-pro/" target="_blank">Affiliates Pro</a> or <a href="https://www.itthinx.com/shop/affiliates-enterprise/" target="_blank">Affiliates Enterprise</a> should be installed, version >= 3.0.0.</li>
+<li>Commission method under Affiliates > Settings, Commissions tab should be Rates.</li>
+<li>Groups plugin, a free plugin for managing access restrictions by itthinx.com.</li>
+</ul>
 
