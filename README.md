@@ -13,11 +13,11 @@ The higher the rank, the better is the commission reward for the affiliate.</p>
 </ul>
 
 ## Usage
-<p>Install and activate the plugin. </p>
-<p>By default after activation, 6 new ranking groups will be added: </p>
- <p> <quote>Rank 1, Rank 2, Rank 3, Rank 4, Rank 5, Rank 6</quote></p>
-<p>and 6 ranking conditions:</p>
-<p><quote>10, 20, 30, 40, 50, 60</quote></p>
+<p>Install and activate the plugin. <br />
+By default after activation, 6 new ranking groups will be added: <br />
+ <i>Rank 1, Rank 2, Rank 3, Rank 4, Rank 5, Rank 6</i><br />
+and 6 ranking conditions:<br />
+<i>10, 20, 30, 40, 50, 60</i></p>
 
 <p>Each time an affiliate registers throught the affiliates registration form, he will be added automatically to Rank 1. <br />
 In order to be promoted to the next level, Rank 2, the affiliate must have earned at least 20 referrals and so on....</p>
