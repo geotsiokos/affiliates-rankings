@@ -19,7 +19,8 @@ The higher the rank, the better is the commission reward for the affiliate.</p>
 <p>and 6 conditions:</p>
 <p><quote>10, 20, 30, 40, 50, 60</quote></p>
 
-<p>Each time an affiliate registers throught the affiliates registration form, he will be added automatically to Rank 1. In order to be promoted to the next level, Rank 2, the affiliate must have earned at least 20 referrals and so on....</p>
+<p>Each time an affiliate registers throught the affiliates registration form, he will be added automatically to Rank 1. <br />
+In order to be promoted to the next level, Rank 2, the affiliate must have earned at least 20 referrals and so on....</p>
 
 ## API
 <p>You can change the group names and promotion conditions by using the following filters:</p>
