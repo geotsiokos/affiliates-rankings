@@ -1,7 +1,7 @@
 # Affiliates Rankings
 <p>Affiliates Rankings is a ranking system for promoting affiliates based on their performance.<br /> 
 Each rank is represented by a group, as the affiliate advances tο higher ranks, <br />
-we can offer higher commissions per group with a href="http://docs.itthinx.com/document/affiliates-pro/rates/" target="_blank">Rates</a> as a performance reward.<br />
+we can offer higher commissions per group with <a href="http://docs.itthinx.com/document/affiliates-pro/rates/" target="_blank">Rates</a> as a performance reward.<br />
 The plugin is compatible with Affiliates Pro and Affiliates Enterprise plugins by <a href="https://www.itthinx.com/" target="_blank">itthinx.com</a>. <p>
 
 ## Requirements
