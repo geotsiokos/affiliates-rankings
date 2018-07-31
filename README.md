@@ -29,7 +29,7 @@ you should add the following snippets in the <i>functions.php</i> file of your a
 
 <pre>add_filter( 'affiliates_ranking_groups_names', 'example_affiliates_ranking_groups_names' );
 function example_affiliates_ranking_groups_names( $names ) {
-	$names = array( 'Class 1','Class 2','Class 3','Class 4');
+	$names = array( 'Class 1', 'Class 2', 'Class 3', 'Class 4' );
 	return $names;
 }</pre>
 <pre>
