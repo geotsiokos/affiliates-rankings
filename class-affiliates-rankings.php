@@ -23,6 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class Affiliates Rankings
+ */
 class Affiliates_Rankings {
 
 	/**
@@ -91,9 +94,13 @@ class Affiliates_Rankings {
 		$user_id = affiliates_get_affiliate_user( $affiliate_id );
 		$user = get_user_by( 'ID', $user_id );
 		if ( $user ) {
-			if ( $group = Groups_Group::read_by_name( $groups[0] ) ) {
+			$group = Groups_Group::read_by_name( $groups[0] );
+			if ( $group ) {
 				if ( !Groups_User_Group::read( $user_id , $group->group_id ) ) {
-					Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $group->group_id ) );
+					Groups_User_Group::create( array(
+						'user_id' => $user_id,
+						'group_id' => $group->group_id
+					) );
 				}
 			}
 		}
@@ -121,6 +128,7 @@ class Affiliates_Rankings {
 			$affiliate_referrals = affiliates_get_affiliate_referrals( $affiliate_id );
 			$current_ranking_key = array_search( $current_rank, $ranking_groups );
 			if ( $current_ranking_key ) {
+
 				// Affiliate hasn't reached the maximum Rank
 				if ( $current_ranking_key < $max_rank_key ) {
 					if ( $affiliate_referrals > $ranking_conditions[$current_ranking_key] ) {
@@ -134,7 +142,10 @@ class Affiliates_Rankings {
 						$next_ranking_key = $current_ranking_key + 1;
 						$next_ranking_group = Groups_Group::read_by_name( $ranking_groups[$promotion_ranking_key] );
 						if ( $next_ranking_group ) {
-							Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $next_ranking_group->group_id ) );
+							Groups_User_Group::create( array(
+								'user_id' => $user_id,
+								'group_id' => $next_ranking_group->group_id
+							) );
 						}
 					}
 				}
@@ -186,7 +197,7 @@ class Affiliates_Rankings {
 			$result = false;
 		}
 		// We need Rates to be used as Commission method
-		if ( 
+		if (
 			!(
 				defined( 'AFFILIATES_EXT_VERSION' ) &&
 				version_compare( AFFILIATES_EXT_VERSION, '3.0.0' ) >= 0 &&
@@ -206,7 +217,7 @@ class Affiliates_Rankings {
 
 	/**
 	 * Check if Ranking Groups exist
-	 * and add them accordingly 
+	 * and add them accordingly
 	 */
 	public static function add_ranking_groups() {
 		$groups = self::get_ranking_groups();
@@ -261,15 +272,19 @@ class Affiliates_Rankings {
 		$user_id = affiliates_get_affiliate_user( $aff_id );
 		$user = get_user_by( 'ID', $user_id );
 		if ( $user ) {
-			foreach( $ranking_groups as $ranking_group ) {
-				if ( $group = Groups_Group::read_by_name( $ranking_group ) ) {
+			foreach ( $ranking_groups as $ranking_group ) {
+				$group = Groups_Group::read_by_name( $ranking_group );
+				if ( $group ) {
 					if ( Groups_User_Group::read( $user_id , $group->group_id ) ) {
 						$result = $group->name;
 					}
 				}
 			}
 			if ( $result == $ranking_groups[0] ) {
-				Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $default_rank_group->group_id ) );
+				Groups_User_Group::create( array(
+					'user_id' => $user_id,
+					'group_id' => $default_rank_group->group_id
+				) );
 			}
 		}
 		return $result;
@@ -277,17 +292,19 @@ class Affiliates_Rankings {
 
 	/**
 	 * Add rates for ranking groups
+	 *
 	 * @todo this does nothing atm
 	 */
 	public static function add_ranking_rates() {
-		
+
 	}
 
 	/**
 	 * Syncronize existing affiliates into ranks
+	 *
 	 * @todo does nothing atm
 	 */
 	public static function sync_affiliates() {
-		
+
 	}
 }Affiliates_Rankings::init();

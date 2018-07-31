@@ -39,15 +39,5 @@ add_action( 'plugins_loaded', 'ar_plugins_loaded' );
  * Check plugin dependencies
  */
 function ar_plugins_loaded() {
-//	if (
-	//	defined( 'AFFILIATES_EXT_VERSION' ) &&
-		//version_compare( AFFILIATES_EXT_VERSION, '3.0.0' ) >= 0 &&
-		//class_exists( 'Affiliates_Referral' ) &&
-		//(
-			//!defined( 'Affiliates_Referral::DEFAULT_REFERRAL_CALCULATION_KEY' ) ||
-			//!get_option( Affiliates_Referral::DEFAULT_REFERRAL_CALCULATION_KEY, null )
-		//)
-	//) {
-		require_once 'class-affiliates-rankings.php';
-	//}
+	require_once 'class-affiliates-rankings.php';
 }
