@@ -73,7 +73,7 @@ class Affiliates_Rankings {
 		30,
 		40,
 		50,
-		60,
+		60
 	);
 
 	/**
